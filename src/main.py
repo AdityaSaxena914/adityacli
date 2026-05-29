@@ -1,12 +1,11 @@
 from openai import OpenAI
 from session import load_session, save_session, delete_session, session_exists
+from config import load_system_prompt
+from llm import get_client
 
 
-
-#giving custom prompt to the local model
-with open("prompts/system.txt", "r", encoding="utf-8") as file:
-    system_prompt = file.read()
-
+client = get_client()
+system_prompt = load_system_prompt()
 conversation_history = [] #stores whole conversation history of one session
 
 print("Welcome to AdityaCLI.\n")
