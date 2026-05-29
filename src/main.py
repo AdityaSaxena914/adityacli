@@ -2,13 +2,14 @@ from session import load_session, save_session, delete_session, session_exists
 from config import load_system_prompt
 from llm import get_client
 from chat import stream_response
+from ui import console, WELCOME_PANEL
 
 
 client = get_client()
 system_prompt = load_system_prompt()
 conversation_history = [] #stores whole conversation history of one session
 
-print("Welcome to AdityaCLI.\n")
+console.print(WELCOME_PANEL)
 
 if session_exists():
     while True:
@@ -21,7 +22,7 @@ if session_exists():
             conversation_history = []
             break
         else:
-            print("Please enter y or n.")
+            console.print("[red]Please enter y or n.[/red]")
 
 
 while True:
@@ -53,4 +54,4 @@ while True:
     print()
             
 
-print("Goodbye Aditya....")
+console.print("[yellow]Goodbye Aditya....[/yellow]")
