@@ -3,13 +3,6 @@ from session import load_session, save_session, delete_session, session_exists
 
 
 
-#creating client, we create only one client per session
-client = OpenAI(
-    base_url="http://127.0.0.1:1234/v1",
-    api_key="lm-studio"
-)
-
-
 #giving custom prompt to the local model
 with open("prompts/system.txt", "r", encoding="utf-8") as file:
     system_prompt = file.read()
