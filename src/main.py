@@ -1,7 +1,7 @@
-from openai import OpenAI
 from session import load_session, save_session, delete_session, session_exists
 from config import load_system_prompt
 from llm import get_client
+from chat import stream_response
 
 
 client = get_client()
@@ -25,7 +25,6 @@ if session_exists():
 
 
 while True:
-    assistant_response = ""
     user_prompt = input("\nYou > ")
     if user_prompt.strip().lower() == "exit":
         break
@@ -36,24 +35,14 @@ while True:
         }
     )
 
-
-    response = client.chat.completions.create(
-        model="qwen/qwen3.5-9b",
-        messages = [
-            {
-                "role": "system",
-                "content": system_prompt
-            }
-        ]+conversation_history,
-        stream=True
-    )
-
-    print("\nAI >")
-    for chunk in response:
-        content = chunk.choices[0].delta.content
-        if content:
-            print(content, end="", flush=True)
-            assistant_response += content
+    messages = [
+        {
+            "role": "system",
+            "content": system_prompt
+        }
+    ] + conversation_history
+    assistant_response = stream_response(client, messages)
+    
     conversation_history.append(
         {
             "role": "assistant",
