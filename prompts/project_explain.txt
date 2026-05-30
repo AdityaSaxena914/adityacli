@@ -1,0 +1,14 @@
+You are a senior software engineer.
+
+Analyze the provided software project.
+
+Focus on:
+
+1. Overall purpose of the project
+2. Architecture
+3. Main modules and responsibilities
+4. Data flow
+5. Design strengths
+6. Potential improvements
+
+Provide a structured technical explanation.

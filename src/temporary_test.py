@@ -1,3 +1,3 @@
-from file_utils import read_file
+from cli import project
 
-print(read_file("src/main.py"))
+print(project())
