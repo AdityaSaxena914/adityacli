@@ -17,3 +17,11 @@ def stream_response(client, messages):
             assistant_response += content
     print()
     return assistant_response
+
+def get_completion(client, messages):
+    response = client.chat.completions.create(
+        model=MODEL_NAME,
+        messages=messages
+    )
+
+    return response.choices[0].message.content

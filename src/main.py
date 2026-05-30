@@ -1,5 +1,5 @@
 from session import load_session, save_session, delete_session, session_exists
-from config import load_system_prompt
+from config import load_prompt
 from llm import get_client
 from chat import stream_response
 from ui import console, header_panel,render_dashboard
@@ -7,7 +7,7 @@ from ui import console, header_panel,render_dashboard
 
 def run_chat():
     client = get_client()
-    system_prompt = load_system_prompt()
+    system_prompt = load_prompt()
     conversation_history = [] #stores whole conversation history of one session
 
 
