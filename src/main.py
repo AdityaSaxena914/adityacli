@@ -2,20 +2,24 @@ from session import load_session, save_session, delete_session, session_exists
 from config import load_system_prompt
 from llm import get_client
 from chat import stream_response
-from ui import console, WELCOME_PANEL
+from ui import console, header_panel,render_dashboard
 
 
 client = get_client()
 system_prompt = load_system_prompt()
 conversation_history = [] #stores whole conversation history of one session
 
-console.print(WELCOME_PANEL)
 
+header_panel()
+
+session_loaded = False
 if session_exists():
     while True:
         res = input("Resume previous session? (y/n): ").strip().lower()
+        print("\n\n")
         if(res == "y"):
             conversation_history = load_session()
+            session_loaded = True
             break
         elif(res == "n"):
             delete_session()
@@ -24,6 +28,10 @@ if session_exists():
         else:
             console.print("[red]Please enter y or n.[/red]")
 
+render_dashboard(
+    session_loaded=session_loaded,
+    message_count=len(conversation_history)
+)
 
 while True:
     user_prompt = input("\nYou > ")
