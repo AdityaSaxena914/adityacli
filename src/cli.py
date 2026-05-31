@@ -1,7 +1,7 @@
 import typer
 from main import run_chat
 from file_utils import read_file, get_project_files
-from config import load_prompt, EXPLAIN_PROMPT_PATH, PROJECT_EXPLAIN_PROMPT_PATH,REVIEW_PROMPT_PATH
+from config import load_prompt, EXPLAIN_PROMPT_PATH, PROJECT_EXPLAIN_PROMPT_PATH,REVIEW_PROMPT_PATH, TEST_PROMPT_PATH
 from chat import get_completion
 from llm import get_client
 from review import load_file_content
@@ -100,6 +100,31 @@ def review(file_path: str):
         {
             "role": "user",
             "content": review_content
+        }
+    ]
+    client = get_client()
+
+    result = get_completion(
+        client,
+        messages
+    )
+
+    print(result)
+
+
+
+@app.command()
+def test(file_path: str):
+    test_code = load_file_content(file_path)
+    test_prompt = load_prompt(TEST_PROMPT_PATH)
+    messages = [
+        {
+            "role": "system",
+            "content": test_prompt
+        },
+        {
+            "role": "user",
+            "content": test_code
         }
     ]
     client = get_client()

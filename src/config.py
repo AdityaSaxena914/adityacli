@@ -6,6 +6,7 @@ SYSTEM_PROMPT_PATH = "prompts/system.txt"
 EXPLAIN_PROMPT_PATH = "prompts/explain_file.txt"
 PROJECT_EXPLAIN_PROMPT_PATH = "prompts/project_explain.txt"
 REVIEW_PROMPT_PATH = "prompts/review_file.txt"
+TEST_PROMPT_PATH = "prompts/generate_tests.txt"
 
 
 
