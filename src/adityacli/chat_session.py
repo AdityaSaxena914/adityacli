@@ -1,13 +1,13 @@
-from session import load_session, save_session, delete_session, session_exists
-from config import load_prompt
-from llm import get_client
-from chat import stream_response
-from ui import console, header_panel,render_dashboard
+from adityacli.session import load_session, save_session, delete_session, session_exists
+from adityacli.config import load_prompt,SYSTEM_PROMPT_PATH
+from adityacli.llm import get_client
+from adityacli.chat import stream_response
+from adityacli.ui import console, header_panel,render_dashboard
 
 
 def run_chat():
     client = get_client()
-    system_prompt = load_prompt()
+    system_prompt = load_prompt(SYSTEM_PROMPT_PATH)
     conversation_history = [] #stores whole conversation history of one session
 
 
@@ -35,7 +35,7 @@ def run_chat():
     )
 
     while True:
-        user_prompt = input("\nYou > ")
+        user_prompt = input("\n[cyan]You[/cyan] > ")
         if user_prompt.strip().lower() == "exit":
             break
         conversation_history.append(

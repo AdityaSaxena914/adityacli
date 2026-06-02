@@ -1,4 +1,4 @@
-from config import MODEL_NAME
+from adityacli.config import MODEL_NAME
 
 
 def stream_response(client, messages):
@@ -6,11 +6,11 @@ def stream_response(client, messages):
     response = client.chat.completions.create(
         model=MODEL_NAME,
         messages =messages,
-        max_tokens=2048,
+        max_tokens = 4096,
         stream=True
     )
 
-    print("\nAI >",end=" ")
+    print("\n[green]AdityaCLI[/green] > ",end=" ")
     for chunk in response:
         content = chunk.choices[0].delta.content
         if content:
@@ -23,7 +23,7 @@ def get_completion(client, messages):
     response = client.chat.completions.create(
         model=MODEL_NAME,
         messages=messages,
-        max_tokens=2048
+        max_tokens = 4096
     )
 
     return response.choices[0].message.content
