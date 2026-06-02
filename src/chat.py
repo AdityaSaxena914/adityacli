@@ -6,6 +6,7 @@ def stream_response(client, messages):
     response = client.chat.completions.create(
         model=MODEL_NAME,
         messages =messages,
+        max_tokens=2048,
         stream=True
     )
 
@@ -21,7 +22,8 @@ def stream_response(client, messages):
 def get_completion(client, messages):
     response = client.chat.completions.create(
         model=MODEL_NAME,
-        messages=messages
+        messages=messages,
+        max_tokens=2048
     )
 
     return response.choices[0].message.content

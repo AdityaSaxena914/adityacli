@@ -1,11 +1,11 @@
 import typer
 from main import run_chat
 from file_utils import read_file, get_project_files
-from config import load_prompt, EXPLAIN_PROMPT_PATH, PROJECT_EXPLAIN_PROMPT_PATH,REVIEW_PROMPT_PATH, TEST_PROMPT_PATH
+from config import load_prompt, EXPLAIN_PROMPT_PATH, PROJECT_EXPLAIN_PROMPT_PATH,REVIEW_PROMPT_PATH, TEST_PROMPT_PATH, DIFF_PROMPT_PATH
 from chat import get_completion
 from llm import get_client
 from review import load_file_content
-
+from diff_generator import generate_diff
 
 
 app = typer.Typer()
@@ -135,6 +135,36 @@ def test(file_path: str):
     )
 
     print(result)
+
+
+
+@app.command()
+def diff(file_path: str):
+    original_conten = load_file_content(file_path)
+    diff_prompt = load_prompt(DIFF_PROMPT_PATH)
+    messages = [
+        {
+            "role": "system",
+            "content": diff_prompt
+        },
+        {
+            "role": "user",
+            "content": original_conten
+        }
+    ]
+    client = get_client()
+
+    improved_content = get_completion(
+        client,
+        messages
+    )
+    print(
+        generate_diff(
+            original_conten, 
+            improved_content
+        )
+    )
+
 
 
 if __name__ == "__main__":
