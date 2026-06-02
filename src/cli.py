@@ -1,12 +1,29 @@
 import typer
 from main import run_chat
-from file_utils import read_file, get_project_files
-from config import load_prompt, EXPLAIN_PROMPT_PATH, PROJECT_EXPLAIN_PROMPT_PATH,REVIEW_PROMPT_PATH, TEST_PROMPT_PATH, DIFF_PROMPT_PATH, CREATE_FILE_PROMPT_PATH
+from file_utils import (
+    read_file, 
+    get_project_files
+)
+
+from config import (
+    load_prompt, 
+    EXPLAIN_PROMPT_PATH, 
+    PROJECT_EXPLAIN_PROMPT_PATH,
+    REVIEW_PROMPT_PATH, 
+    TEST_PROMPT_PATH, DIFF_PROMPT_PATH, 
+    CREATE_FILE_PROMPT_PATH,
+    EDIT_FILE_PROMPT_PATH
+)
+
 from chat import get_completion
 from llm import get_client
 from review import load_file_content
 from diff_generator import generate_diff
 from file_writer import write_file
+from file_editor import edit_file
+
+
+
 
 app = typer.Typer()
 
@@ -196,6 +213,78 @@ def create(file_path: str):
     )
 
     print(f"Created {file_path}")
+
+
+
+
+@app.command()
+def edit(file_path: str):
+    original_content = load_file_content(file_path)
+
+    edit_request = input(
+        "What changes should be made? "
+    )
+
+    edit_prompt = load_prompt(
+        EDIT_FILE_PROMPT_PATH
+    )
+
+    messages = [    
+        {
+            "role": "system",
+            "content": edit_prompt
+        },
+        {
+            "role": "user",
+            "content":
+            f"""
+    Request:
+    {edit_request}
+
+    File:
+    {original_content}
+    """
+        }
+    ]
+
+    client = get_client()
+
+    updated_content = get_completion(
+        client,
+        messages
+    )
+
+    diff = generate_diff(
+            original_content,
+        updated_content
+    )
+
+    print(diff)
+
+    while True:
+        choice = input(
+            "\nApply changes? (y/n): "
+        ).strip().lower()
+        if choice == "y":
+            edit_file(
+                file_path,
+                updated_content
+            )
+
+            print("Changes applied.")
+            break
+        elif choice == "n":
+            print("Changes discarded.")
+            break
+        else:
+            print("Invalid Choice! Enter y or n...")
+            
+        
+
+
+
+
+
 
 
 if __name__ == "__main__":

@@ -9,6 +9,7 @@ REVIEW_PROMPT_PATH = "prompts/review_file.txt"
 TEST_PROMPT_PATH = "prompts/generate_tests.txt"
 DIFF_PROMPT_PATH = "prompts/diff.txt"
 CREATE_FILE_PROMPT_PATH = "prompts/create_file.txt"
+EDIT_FILE_PROMPT_PATH = "prompts/edit_file.txt"
 
 
 def load_prompt(prompt_path):
