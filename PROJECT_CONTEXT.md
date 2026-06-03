@@ -1,50 +1,78 @@
 # AdityaCLI - Master Project Context
 
-## Vision
+## Current Status
 
-AdityaCLI is a local-first AI developer assistant designed for small local models running on consumer hardware.
+Completed:
 
-The goal is NOT to compete with Claude Code, OpenCode, OpenClaw, or Codex.
+* Chat
+* Streaming Responses
+* System Prompts
+* Session Persistence
+* Session Loading
+* Session Deletion
+* Conversation History
+* Rich Terminal UI Foundation
+* Typer CLI Architecture
+* File Explanation
+* Project Explanation
+* Code Review
+* Test Generation
+* Diff Generation
+* File Creation
+* File Editing
+* Approval Workflow
+* Package Refactor
+* Portable CLI Command
 
-The goal is to:
+Current Command:
 
-1. Build a powerful local coding assistant.
-2. Learn the architecture behind modern AI developer tools.
-3. Optimize for small models, limited VRAM, and limited context.
-4. Keep the human in control rather than building a fully autonomous agent.
+adityacli
 
 ---
 
-# Core Philosophy
+# Vision
+
+AdityaCLI is a local-first AI developer assistant optimized for small local models.
+
+Primary goals:
+
+* Maximize capability from small models.
+* Minimize context usage.
+* Keep the human in control.
+* Build reusable AI tooling infrastructure.
+* Support multiple models and providers.
+
+---
+
+# Design Principles
 
 AdityaCLI should be:
 
 * Local-first
-* Tool-driven
-* Human-controlled
 * Model-agnostic
+* Tool-driven
 * Context-efficient
+* Memory-centric
+* Human-controlled
 
-AdityaCLI should NOT:
+AdityaCLI should not depend on:
 
-* Depend on a specific model
-* Depend on a specific vendor
-* Require large GPUs
-* Depend on huge context windows
-* Rely on long autonomous agent loops
+* Large context windows
+* Large GPUs
+* Vendor-specific APIs
+* Autonomous long-running agents
 
 ---
 
-# Hardware Constraints
+# Hardware Assumptions
 
-Current Hardware:
+Current target hardware:
 
-* 8 GB VRAM
+* 8GB VRAM
 * Local LM Studio
-* 16k Context
-* Qwen 3.5 9B
+* 16k Context Window
 
-Design decisions should assume these constraints.
+Future features should assume these constraints.
 
 ---
 
@@ -52,11 +80,15 @@ Design decisions should assume these constraints.
 
 User
 ↓
-AdityaCLI
+CLI Layer
+↓
+Intent Layer
+↓
+Tool Layer
 ↓
 Memory Layer
 ↓
-Tool Layer
+Context Builder
 ↓
 Model Layer
 ↓
@@ -64,176 +96,51 @@ Provider
 
 ---
 
-# Future Model Strategy
-
-Different models should be usable for different tasks.
-
-Examples:
-
-Coding:
-
-* Qwen 3.5 9B
-
-Summarization:
-
-* Gemma 4 2B
-
-Vision:
-
-* Gemma Vision
-
-Advanced Reasoning:
-
-* Claude
-* GPT
-
-AdityaCLI should eventually support model routing and provider switching.
-
----
-
 # Memory Strategy
 
-Long-Term Storage:
+Persistent Storage:
 
 * Database
+* Embeddings
+* Repository Knowledge
+* User Preferences
 
-Active Context:
+Active Memory:
 
-* UCM (Unified Context Memory)
+UCM (Unified Context Memory)
 
-UCM should contain:
+UCM contains:
 
-* Project Summary
 * Active Goals
+* Project Summary
 * Important Decisions
 * Open Tasks
-* Loaded Memories
+* Relevant Memories
+* Relevant Repository Knowledge
 
-The database stores everything.
+Database stores everything.
 
-UCM stores only what the model needs right now.
+UCM stores only what is needed for the current task.
 
 ---
 
 # Development Roadmap
 
-## Phase 1-15 (Completed)
-
-Phase 1
-
-* LM Studio integration
-
-Phase 2
-
-* Basic chat
-
-Phase 3
-
-* Streaming responses
-
-Phase 4
-
-* System prompts
-
-Phase 5
-
-* Session persistence
-
-Phase 6
-
-* Session loading
-
-Phase 7
-
-* Session deletion
-
-Phase 8
-
-* Conversation history
-
-Phase 9
-
-* Refactoring foundations
-
-Phase 10
-
-* Modular architecture
-
-Phase 11
-
-* UI abstraction
-
-Phase 12
-
-* Rich terminal UI
-
-Phase 13
-
-* Typer CLI foundation
-
-Phase 14
-
-* File explanation
-
-Phase 15
-
-* Project awareness
-
----
-
-## Phase 16
-
-Code Review
-
-Goal:
-Review files and suggest improvements.
-
----
-
-## Phase 17
-
-Test Generation
-
-Goal:
-Generate tests for source files.
-
----
-
-## Phase 18
-
-Diff Generation
-
-Goal:
-Show proposed modifications before applying.
-
----
-
-## Phase 19
-
-File Writing
-
-Goal:
-Create files from prompts.
-
----
-
-## Phase 20
-
-File Editing
-
-Goal:
-Modify existing files.
-
-LinkedIn Milestone #2.
-
----
-
 ## Phase 21
 
 Tool Registry
 
+Implement:
+
+* Tool registration
+* Tool metadata
+* Tool discovery
+* Tool execution interface
+* Tool categories
+
 Goal:
-Unified tool execution architecture.
+
+Single architecture for all future tools.
 
 ---
 
@@ -241,8 +148,16 @@ Unified tool execution architecture.
 
 Web Search Tool
 
+Implement:
+
+* Search queries
+* Result extraction
+* Result summarization
+* Search integration with chat
+
 Goal:
-Allow internet-assisted tasks.
+
+Allow internet-assisted development tasks.
 
 ---
 
@@ -250,8 +165,16 @@ Allow internet-assisted tasks.
 
 Terminal Command Tool
 
+Implement:
+
+* Command execution
+* Command output capture
+* Safety restrictions
+* Command validation
+
 Goal:
-Run controlled shell commands.
+
+Controlled shell access.
 
 ---
 
@@ -259,17 +182,35 @@ Run controlled shell commands.
 
 Git Tool
 
+Implement:
+
+* git status
+* git diff
+* git commit
+* git branch
+* git log
+* git blame
+
 Goal:
-Git status, diff, commit, branch.
+
+Repository awareness.
 
 ---
 
 ## Phase 25
 
-UCM Foundation
+Unified Context Memory Foundation
+
+Implement:
+
+* UCM structure
+* Context management
+* Context insertion
+* Context prioritization
 
 Goal:
-Unified Context Memory architecture.
+
+Control what information reaches the model.
 
 ---
 
@@ -277,8 +218,17 @@ Unified Context Memory architecture.
 
 Memory Database
 
+Implement:
+
+* SQLite storage
+* Embedding storage
+* Vector search
+* Memory records
+* Repository knowledge records
+
 Goal:
-Store project memories and summaries.
+
+Persistent semantic memory.
 
 ---
 
@@ -286,8 +236,16 @@ Store project memories and summaries.
 
 Memory Loading
 
+Implement:
+
+* Similarity search
+* Relevance ranking
+* Memory selection
+* UCM population
+
 Goal:
-Load selected memories into UCM.
+
+Load only useful memories.
 
 ---
 
@@ -295,8 +253,24 @@ Load selected memories into UCM.
 
 Intent Detection
 
+Implement:
+
+* Intent classification
+* Tool recommendation
+* Task categorization
+
+Examples:
+
+* Review
+* Explain
+* Edit
+* Search
+* Git
+* Terminal
+
 Goal:
-Determine user intent automatically.
+
+Automatic workflow selection.
 
 ---
 
@@ -304,11 +278,23 @@ Determine user intent automatically.
 
 Natural Language Tool Calling
 
-Goal:
-Use tools directly from chat.
+Implement:
 
-Example:
-"Review src/main.py"
+* Tool invocation from chat
+* Parameter extraction
+* Tool execution routing
+
+Examples:
+
+"Review session.py"
+
+"Run pytest"
+
+"Show git status"
+
+Goal:
+
+Use tools through conversation.
 
 ---
 
@@ -316,8 +302,26 @@ Example:
 
 Simple Agent Loop
 
+Implement:
+
+* Tool execution
+* Observation
+* Decision step
+* Iteration control
+
+Workflow:
+
+Think
+↓
+Use Tool
+↓
+Observe
+↓
+Continue
+
 Goal:
-Tool → Result → Continue workflow.
+
+Multi-step task completion.
 
 ---
 
@@ -325,8 +329,22 @@ Tool → Result → Continue workflow.
 
 Provider Abstraction
 
+Implement:
+
+* Provider interface
+* Shared model API
+* Configuration layer
+
+Providers:
+
+* LM Studio
+* OpenAI
+* Anthropic
+* OpenRouter
+
 Goal:
-Support multiple AI providers.
+
+Provider independence.
 
 ---
 
@@ -334,8 +352,21 @@ Support multiple AI providers.
 
 Provider Switching
 
+Implement:
+
+* Dynamic model selection
+* Task routing
+* Provider selection
+
+Examples:
+
+* Coding Model
+* Summarization Model
+* Vision Model
+
 Goal:
-Switch models dynamically.
+
+Use the best model for each task.
 
 ---
 
@@ -343,8 +374,22 @@ Switch models dynamically.
 
 Project Refactoring
 
+Implement:
+
+* File movement
+* Symbol movement
+* Import updates
+* Refactor validation
+
+Additional Analysis:
+
+* Dependency graph
+* Import graph
+* File relationships
+
 Goal:
-Move code across files automatically.
+
+Safe automated refactoring.
 
 ---
 
@@ -352,8 +397,16 @@ Move code across files automatically.
 
 Project Planning
 
+Implement:
+
+* Feature planning
+* Architecture planning
+* Impact analysis
+* Task breakdown
+
 Goal:
-Generate implementation plans.
+
+Generate implementation plans before coding.
 
 ---
 
@@ -361,8 +414,39 @@ Generate implementation plans.
 
 Context Builder
 
+Implement:
+
+* Relevant file selection
+* Dependency-aware context
+* Function tracing
+* Class tracing
+* Import tracing
+* Context ranking
+
 Goal:
-Automatically select relevant files.
+
+Build the smallest useful context.
+
+This is a critical system.
+
+---
+
+## Phase 35.5
+
+Code Intelligence Engine
+
+Implement:
+
+* Find symbol
+* Find references
+* Find implementation
+* Find imports
+* Find callers
+* Find usages
+
+Goal:
+
+Navigate large codebases efficiently.
 
 ---
 
@@ -370,8 +454,41 @@ Automatically select relevant files.
 
 Repository Indexing
 
+Implement:
+
+* AST parsing
+* Function extraction
+* Class extraction
+* Module extraction
+* Code chunking
+* Embedding generation
+
 Goal:
-Build project understanding database.
+
+Build structured repository knowledge.
+
+---
+
+## Phase 36.5
+
+Repository Q&A
+
+Implement:
+
+* Repository question answering
+* Semantic retrieval
+* Context generation
+* Repository search
+
+Examples:
+
+* Where is authentication implemented?
+* How does session persistence work?
+* Which module handles configuration?
+
+Goal:
+
+Talk to codebases.
 
 ---
 
@@ -379,8 +496,16 @@ Build project understanding database.
 
 Codebase Memory
 
+Implement:
+
+* Repository summaries
+* Architectural summaries
+* Component summaries
+* Decision tracking
+
 Goal:
-Persistent repository knowledge.
+
+Persistent repository understanding.
 
 ---
 
@@ -388,8 +513,17 @@ Persistent repository knowledge.
 
 Task Execution Engine
 
+Implement:
+
+* Plans
+* Steps
+* Progress tracking
+* Execution state
+* Rollback support
+
 Goal:
-Multi-step deterministic workflows.
+
+Deterministic workflows.
 
 ---
 
@@ -397,43 +531,48 @@ Multi-step deterministic workflows.
 
 Workspace Awareness
 
+Implement:
+
+* Multi-project indexing
+* Cross-project search
+* Workspace graph
+* Shared dependency analysis
+
 Goal:
-Understand entire workspace structure.
+
+Understand the entire workspace.
 
 ---
 
 ## Phase 40
 
-AdityaCLI v1 Release
+AdityaCLI v1
+
+Requirements:
+
+* Tool Registry
+* Memory System
+* Context Builder
+* Repository Intelligence
+* Multi-Provider Support
+* Workspace Awareness
 
 Goal:
-Stable, usable local developer assistant.
+
+Stable local developer assistant.
 
 ---
 
-# Success Criteria
+# Primary Differentiator
 
-AdityaCLI succeeds if:
+AdityaCLI should improve small-model performance through:
 
-* It can assist coding locally.
-* It works well on consumer hardware.
-* It reduces dependency on paid coding assistants.
-* It teaches the architecture behind AI developer tools.
-* Improvements are limited by model capability rather than missing engineering infrastructure.
+* Better Memory
+* Better Context Selection
+* Better Tooling
+* Better Repository Intelligence
+* Better Architecture
 
----
+The objective is not bigger models.
 
-# Long-Term Differentiator
-
-Most systems solve limitations with:
-
-* Bigger models
-* Bigger context
-* More compute
-
-AdityaCLI aims to solve limitations with:
-
-* Better memory
-* Better context selection
-* Better tooling
-* Better architecture
+The objective is making small models more effective.
