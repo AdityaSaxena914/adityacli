@@ -37,6 +37,7 @@ from adityacli.tool_registry import (
 )
 
 from adityacli.search import search_web
+from adityacli.terminal_tool import (run_command)
 
 app = typer.Typer()
 
@@ -546,7 +547,29 @@ Source:
 
     print(result)
 
+@app.command()
+def terminal(command: str):
+    result = run_command(command)
+    if result["success"]:
+        success("Command executed successfully")
+        console.print(result["stdout"])
+    else:
+        error("Command execution failed")
+        console.print(result["stderr"])
 
+
+
+
+
+
+
+
+Tool(
+    name="terminal",
+    description="Execute terminal commands",
+    category="SYSTEM",
+    handler=terminal
+)
 register_tool(
     Tool(
         name="search",
