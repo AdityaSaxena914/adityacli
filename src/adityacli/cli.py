@@ -38,6 +38,14 @@ from adityacli.tool_registry import (
 
 from adityacli.search import search_web
 from adityacli.terminal_tool import (run_command)
+from adityacli.git_tool import (
+    git_branch, 
+    git_diff,
+    git_log,
+    git_status,
+    display_command_result
+)
+
 
 app = typer.Typer()
 
@@ -559,17 +567,81 @@ def terminal(command: str):
 
 
 
+@app.command(name="git-status")
+def git_status_command():
+
+    result = git_status()
+    display_command_result(result)
 
 
+@app.command(name="git-diff")
+def git_diff_command():
+
+    result = git_diff()
+    display_command_result(result)
 
 
+@app.command(name="git-log")
+def git_log_command():
 
-Tool(
-    name="terminal",
-    description="Execute terminal commands",
-    category="SYSTEM",
-    handler=terminal
+    result = git_log()
+    display_command_result(result)
+
+
+@app.command(name="git-branch")
+def git_branch_command():
+
+    result = git_branch()
+    display_command_result(result)
+
+
+register_tool(
+    Tool(
+        name="git-status",
+        description="Show repository status",
+        category="GIT",
+        handler=git_status_command
+    )
 )
+
+register_tool(
+    Tool(
+        name="git-diff",
+        description="Show repository changes",
+        category="GIT",
+        handler=git_diff_command
+    )
+)
+
+register_tool(
+    Tool(
+        name="git-log",
+        description="Show commit history",
+        category="GIT",
+        handler=git_log_command
+    )
+)
+
+register_tool(
+    Tool(
+        name="git-branch",
+        description="Show repository branches",
+        category="GIT",
+        handler=git_branch_command
+    )
+)
+
+
+register_tool(
+    Tool(
+        name="terminal",
+        description="Execute terminal commands",
+        category="SYSTEM",
+        handler=terminal
+    )
+)
+
+
 register_tool(
     Tool(
         name="search",
@@ -650,9 +722,6 @@ register_tool(
         handler=project
     )
 )
-
-
-
 
 
 
