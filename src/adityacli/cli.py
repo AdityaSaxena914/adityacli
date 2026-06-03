@@ -20,6 +20,7 @@ from adityacli.chat import get_completion
 from adityacli.llm import get_client
 from adityacli.diff_generator import generate_diff
 from adityacli.ui import (
+    console,
     tool_status,
     success,
     warning,
@@ -27,6 +28,13 @@ from adityacli.ui import (
     thinking,
     approval_panel
 )
+
+from adityacli.tool_registry import (
+    Tool,
+    register_tool,
+    list_tools
+)
+
 
 
 app = typer.Typer()
@@ -434,6 +442,99 @@ def edit(file_path: str):
             error("Invalid choice! Enter y or n...")
             
 
+
+@app.command()
+def tools():
+    categories = {}
+
+    for tool in list_tools():
+        if tool.category not in categories:
+            categories[tool.category] = []
+
+        categories[tool.category].append(tool)
+
+    for category, tools in categories.items():
+        console.print(f"\n[{category}]")
+
+        for tool in tools:
+            console.print(
+                f"  {tool.name} - {tool.description}"
+            )
+
+
+
+
+register_tool(
+    Tool(
+        name="review",
+        description="Review source code",
+        category="CODE",
+        handler=review
+    )
+)
+
+register_tool(
+    Tool(
+        name="test",
+        description="Generate tests",
+        category="CODE",
+        handler=test
+    )
+)
+
+register_tool(
+    Tool(
+        name="diff",
+        description="Generate diffs",
+        category="CODE",
+        handler=diff
+    )
+)
+
+register_tool(
+    Tool(
+        name="create",
+        description="Create files",
+        category="FILE",
+        handler=create
+    )
+)
+
+register_tool(
+    Tool(
+        name="edit",
+        description="Edit files",
+        category="FILE",
+        handler=edit
+    )
+)
+
+register_tool(
+    Tool(
+        name="chat",
+        description="Interactive chat session",
+        category="CORE",
+        handler=chat
+    )
+)
+
+register_tool(
+    Tool(
+        name="explain",
+        description="Explain a source file",
+        category="ANALYSIS",
+        handler=explain
+    )
+)
+
+register_tool(
+    Tool(
+        name="project",
+        description="Analyze an entire project",
+        category="ANALYSIS",
+        handler=project
+    )
+)
 
 
 if __name__ == "__main__":
