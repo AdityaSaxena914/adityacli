@@ -18,7 +18,7 @@ TEST_PROMPT_PATH = PROMPTS_DIR / "generate_tests.txt"
 DIFF_PROMPT_PATH = PROMPTS_DIR / "diff.txt"
 CREATE_FILE_PROMPT_PATH = PROMPTS_DIR / "create_file.txt"
 EDIT_FILE_PROMPT_PATH = PROMPTS_DIR / "edit_file.txt"
-
+SEARCH_SUMMARY_PROMPT_PATH = PROMPTS_DIR / "search_summary.txt"
 
 def load_prompt(prompt_path):
     with open(prompt_path, "r", encoding="utf-8") as file:

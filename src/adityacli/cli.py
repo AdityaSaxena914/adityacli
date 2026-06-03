@@ -13,7 +13,8 @@ from adityacli.config import (
     REVIEW_PROMPT_PATH, 
     TEST_PROMPT_PATH, DIFF_PROMPT_PATH, 
     CREATE_FILE_PROMPT_PATH,
-    EDIT_FILE_PROMPT_PATH
+    EDIT_FILE_PROMPT_PATH,
+    SEARCH_SUMMARY_PROMPT_PATH
 )
 
 from adityacli.chat import get_completion
@@ -35,7 +36,7 @@ from adityacli.tool_registry import (
     list_tools
 )
 
-
+from adityacli.search import search_web
 
 app = typer.Typer()
 
@@ -463,6 +464,97 @@ def tools():
 
 
 
+@app.command()
+def search(
+    query: str,
+    summary: bool = typer.Option(
+        False,
+        "--summary",
+        help="Summarize search results using the LLM"
+    )
+):
+    tool_status(
+        "WEB",
+        f"Searching for: {query}"
+    )
+
+    results = search_web(query)
+
+    if not summary:
+        for result in results:
+            console.rule(
+                f"[cyan]{result['title']}[/cyan]"
+            )
+
+            console.print(
+                f"[blue]{result['href']}[/blue]"
+            )
+
+            console.print(
+                result["body"]
+            )
+
+            console.print()
+
+        return
+
+    tool_status(
+        "LLM",
+        "Summarizing results"
+    )
+
+    search_context = ""
+
+    for result in results:
+        search_context += f"""
+Title: {result['title']}
+
+Content:
+{result['body']}
+
+Source:
+{result['href']}
+
+"""
+
+    summary_prompt = load_prompt(
+        SEARCH_SUMMARY_PROMPT_PATH
+    )
+
+    messages = [
+        {
+            "role": "system",
+            "content": summary_prompt
+        },
+        {
+            "role": "user",
+            "content": search_context
+        }
+    ]
+
+    client = get_client()
+
+    with thinking():
+        result = get_completion(
+            client,
+            messages
+        )
+
+    console.rule(
+        "[green]Search Summary[/green]"
+    )
+
+    print(result)
+
+
+register_tool(
+    Tool(
+        name="search",
+        description="Search the web",
+        category="WEB",
+        handler=search
+    )
+)
 
 register_tool(
     Tool(
@@ -535,6 +627,10 @@ register_tool(
         handler=project
     )
 )
+
+
+
+
 
 
 if __name__ == "__main__":
