@@ -23,10 +23,36 @@ Completed:
 * Approval Workflow
 * Package Refactor
 * Portable CLI Command
+* Tool Registry
+* Tool Metadata System
+* Tool Discovery
+* Tool Categories
+* Web Search
+* Search Result Summarization
+* Terminal Command Execution
+* Terminal Output Capture
+* Git Status
+* Git Diff
+* Git Log
+* Git Branch
+* Git Tool Integration
+* Project Documentation System
+* Global CLI Installation
 
 Current Command:
 
 adityacli
+
+Current Tool Categories:
+
+* CORE
+* ANALYSIS
+* CODE
+* FILE
+* WEB
+* SYSTEM
+* GIT
+
 
 ---
 
@@ -79,198 +105,250 @@ Future features should assume these constraints.
 # Long-Term Architecture
 
 User
+
 ↓
+
 CLI Layer
+
 ↓
+
 Intent Layer
+
 ↓
+
 Tool Layer
+
 ↓
-Memory Layer
+
+Memory Retrieval Layer
+
 ↓
+
+Unified Context Memory (UCM)
+
+↓
+
 Context Builder
+
 ↓
+
 Model Layer
+
 ↓
+
 Provider
+
+Multiple models may consume the same UCM.
+
+UCM acts as the shared context layer for AdityaCLI rather than belonging to any individual model.
+
 
 ---
 
 # Memory Strategy
 
-Persistent Storage:
+## Long-Term Memory
 
-* Database
-* Embeddings
+Persistent Storage contains:
+
+* Session History
+* Session Summaries
+* Important Decisions
+* Tasks
 * Repository Knowledge
+* Embeddings
 * User Preferences
+* Project Knowledge
 
-Active Memory:
+Long-Term Memory is the permanent knowledge store of AdityaCLI.
 
-UCM (Unified Context Memory)
+Nothing is sent directly from Long-Term Memory to the model.
 
-UCM contains:
+---
 
-* Active Goals
+## Unified Context Memory (UCM)
+
+UCM (Unified Context Memory) is AdityaCLI's model-agnostic shared context layer.
+
+UCM is not a database.
+
+UCM is not long-term storage.
+
+UCM acts as the active context package for the current task.
+
+Purpose:
+
+* Aggregate relevant information from multiple sessions
+* Aggregate retrieved memories
+* Aggregate repository knowledge
+* Aggregate active goals and tasks
+* Provide a unified view of the current state
+
+UCM may contain:
+
+* Active Goal
 * Project Summary
 * Important Decisions
 * Open Tasks
 * Relevant Memories
+* Relevant Session Summaries
 * Relevant Repository Knowledge
+* Current Conversation Context
 
-Database stores everything.
+UCM is shared across all models.
 
-UCM stores only what is needed for the current task.
+The memory belongs to AdityaCLI, not the model.
+
+Examples:
+
+* Qwen
+* Claude
+* GPT
+* Gemma
+
+can all consume the same UCM.
+
+---
+
+## Memory Flow
+
+Current Session
+↓
+Session Summary
+↓
+Long-Term Memory
+
+Long-Term Memory
+↓
+Retriever
+↓
+Context Assembly
+↓
+UCM
+↓
+Model(s)
+
+Models may read from UCM and contribute new information back to Long-Term Memory through summaries, decisions, tasks, and knowledge extraction.
+
+---
+
+## Design Goal
+
+The objective is not to give models larger context windows.
+
+The objective is to provide the smallest possible context containing the highest-value information.
+
+UCM acts as the shared RAM of AdityaCLI.
+
+Long-Term Memory acts as the persistent storage layer.
+
 
 ---
 
 # Development Roadmap
 
-## Phase 21
-
-Tool Registry
-
-Implement:
-
-* Tool registration
-* Tool metadata
-* Tool discovery
-* Tool execution interface
-* Tool categories
-
-Goal:
-
-Single architecture for all future tools.
-
----
-
-## Phase 22
-
-Web Search Tool
-
-Implement:
-
-* Search queries
-* Result extraction
-* Result summarization
-* Search integration with chat
-
-Goal:
-
-Allow internet-assisted development tasks.
-
----
-
-## Phase 23
-
-Terminal Command Tool
-
-Implement:
-
-* Command execution
-* Command output capture
-* Safety restrictions
-* Command validation
-
-Goal:
-
-Controlled shell access.
-
----
-
-## Phase 24
-
-Git Tool
-
-Implement:
-
-* git status
-* git diff
-* git commit
-* git branch
-* git log
-* git blame
-
-Goal:
-
-Repository awareness.
-
----
-
 ## Phase 25
 
-Unified Context Memory Foundation
+Unified Context Memory (UCM) Architecture
 
 Implement:
 
-* UCM structure
-* Context management
-* Context insertion
-* Context prioritization
+* UCM schema
+* Context containers
+* Session context support
+* Memory context support
+* Repository context support
+* Task context support
+* Decision context support
+* Context serialization
+* Context injection format
 
 Goal:
 
-Control what information reaches the model.
+Create a model-agnostic shared context layer capable of providing a unified view of relevant information regardless of which model is being used.
 
 ---
 
 ## Phase 26
 
-Memory Database
+Memory Storage Layer
 
 Implement:
 
 * SQLite storage
+* Session records
+* Session summaries
+* Important decisions
+* Task records
 * Embedding storage
-* Vector search
-* Memory records
-* Repository knowledge records
+* Repository knowledge storage
+* Metadata indexing
 
 Goal:
 
-Persistent semantic memory.
+Persistent long-term storage for all AdityaCLI knowledge.
 
 ---
 
 ## Phase 27
 
-Memory Loading
+Memory Retrieval Engine
 
 Implement:
 
 * Similarity search
 * Relevance ranking
-* Memory selection
-* UCM population
+* Session retrieval
+* Decision retrieval
+* Task retrieval
+* Repository retrieval
+* Context scoring
 
 Goal:
 
-Load only useful memories.
+Retrieve the most relevant information from long-term storage for the current task.
+
+Workflow:
+
+Memory Database
+↓
+Retriever
+↓
+Candidate Context
 
 ---
 
 ## Phase 28
 
-Intent Detection
+Context Assembly Engine
 
 Implement:
 
-* Intent classification
-* Tool recommendation
-* Task categorization
+* Intent-aware retrieval
+* Session summary loading
+* Decision loading
+* Task loading
+* Repository knowledge loading
+* Context ranking
+* Context compression
+* UCM population
 
-Examples:
+Workflow:
 
-* Review
-* Explain
-* Edit
-* Search
-* Git
-* Terminal
+Memory Database
+↓
+Retriever
+↓
+Context Assembly
+↓
+UCM
+↓
+Model
 
 Goal:
 
-Automatic workflow selection.
+Construct the smallest and most relevant UCM possible for each request.
+
 
 ---
 
@@ -417,15 +495,20 @@ Context Builder
 Implement:
 
 * Relevant file selection
-* Dependency-aware context
+* Dependency-aware context selection
 * Function tracing
 * Class tracing
 * Import tracing
+* Dependency tracing
 * Context ranking
+* Context compression
+* Context budget management
 
 Goal:
 
-Build the smallest useful context.
+Build the smallest useful context possible for the model.
+
+The system should understand relationships between files instead of retrieving files independently.
 
 This is a critical system.
 
@@ -443,10 +526,16 @@ Implement:
 * Find imports
 * Find callers
 * Find usages
+* Dependency graph generation
+* Import graph generation
+* Reverse dependency lookup
+* File relationship analysis
 
 Goal:
 
-Navigate large codebases efficiently.
+Navigate and understand large codebases efficiently.
+
+This system becomes the foundation for repository intelligence and context building.
 
 ---
 
@@ -460,12 +549,20 @@ Implement:
 * Function extraction
 * Class extraction
 * Module extraction
+* Import extraction
+* Symbol extraction
+* Dependency extraction
+* File metadata generation
+* Symbol metadata generation
+* Repository metadata generation
 * Code chunking
 * Embedding generation
 
 Goal:
 
-Build structured repository knowledge.
+Build structured repository knowledge that can be queried efficiently.
+
+Repository knowledge should contain both semantic information and structural relationships.
 
 ---
 
@@ -477,18 +574,24 @@ Implement:
 
 * Repository question answering
 * Semantic retrieval
+* Dependency-aware retrieval
+* Relationship-aware retrieval
 * Context generation
 * Repository search
+* Context expansion through imports
+* Context expansion through references
 
 Examples:
 
 * Where is authentication implemented?
 * How does session persistence work?
 * Which module handles configuration?
+* Which files depend on session.py?
+* What would break if this function changes?
 
 Goal:
 
-Talk to codebases.
+Talk to codebases while understanding repository structure and dependencies instead of relying only on semantic search.
 
 ---
 

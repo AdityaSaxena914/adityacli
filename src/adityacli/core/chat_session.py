@@ -1,9 +1,9 @@
-from adityacli.session import load_session, save_session, delete_session, session_exists
-from adityacli.config import load_prompt,SYSTEM_PROMPT_PATH
-from adityacli.llm import get_client
-from adityacli.chat import stream_response
-from adityacli.ui import console, header_panel,render_dashboard
-
+from adityacli.core.session import load_session, save_session, delete_session, session_exists
+from adityacli.core.config import load_prompt,SYSTEM_PROMPT_PATH
+from adityacli.core.llm import get_client
+from adityacli.chat.chat import stream_response
+from adityacli.ui.ui import console, header_panel,render_dashboard
+from rich.prompt import Prompt
 
 def run_chat():
     client = get_client()
@@ -14,20 +14,22 @@ def run_chat():
     header_panel()
 
     session_loaded = False
+
     if session_exists():
-        while True:
-            res = input("Resume previous session? (y/n): ").strip().lower()
-            print("\n\n")
-            if(res == "y"):
-                conversation_history = load_session()
-                session_loaded = True
-                break
-            elif(res == "n"):
-                delete_session()
-                conversation_history = []
-                break
-            else:
-                console.print("[red]Please enter y or n.[/red]")
+        res = Prompt.ask(
+            "[cyan]Resume previous session[/cyan]",
+            choices=["y", "n", "Y", "N"],
+            default="y"
+        ).lower()
+
+        print("\n")
+
+        if res == "y":
+            conversation_history = load_session()
+            session_loaded = True
+        else:
+            delete_session()
+            conversation_history = []
 
     render_dashboard(
         session_loaded=session_loaded,
@@ -35,7 +37,11 @@ def run_chat():
     )
 
     while True:
-        user_prompt = input("\n[cyan]You[/cyan] > ")
+
+        console.print()
+        console.print("\n[cyan]You[/cyan] >", end=" ")
+        user_prompt = input()
+
         if user_prompt.strip().lower() == "exit":
             break
         conversation_history.append(
@@ -61,7 +67,9 @@ def run_chat():
         )
         save_session(conversation_history)
         print()
-    console.print("[yellow]Goodbye Aditya....[/yellow]")
+    console.print(
+        "\n[yellow]Session saved. Goodbye.[/yellow]"
+    )
 
 
 if __name__ == "__main__":

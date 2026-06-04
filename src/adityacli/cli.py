@@ -1,12 +1,12 @@
 import typer
-from adityacli.chat_session import run_chat
-from adityacli.file_utils import (
+from adityacli.core.chat_session import run_chat
+from adityacli.utils.file_utils import (
     read_file, 
     get_project_files,
     write_file
 )
 
-from adityacli.config import (
+from adityacli.core.config import (
     load_prompt, 
     EXPLAIN_PROMPT_PATH, 
     PROJECT_EXPLAIN_PROMPT_PATH,
@@ -17,10 +17,10 @@ from adityacli.config import (
     SEARCH_SUMMARY_PROMPT_PATH
 )
 
-from adityacli.chat import get_completion
-from adityacli.llm import get_client
-from adityacli.diff_generator import generate_diff
-from adityacli.ui import (
+from adityacli.chat.chat import get_completion
+from adityacli.core.llm import get_client
+from adityacli.utils.diff_generator import generate_diff
+from adityacli.ui.ui import (
     console,
     tool_status,
     success,
@@ -30,15 +30,15 @@ from adityacli.ui import (
     approval_panel
 )
 
-from adityacli.tool_registry import (
+from adityacli.core.tool_registry import (
     Tool,
     register_tool,
     list_tools
 )
 
-from adityacli.search import search_web
-from adityacli.terminal_tool import (run_command)
-from adityacli.git_tool import (
+from adityacli.tools.search import search_web
+from adityacli.tools.terminal_tool import (run_command)
+from adityacli.tools.git_tool import (
     git_branch, 
     git_diff,
     git_log,

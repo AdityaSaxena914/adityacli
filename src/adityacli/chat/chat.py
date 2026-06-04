@@ -1,4 +1,5 @@
-from adityacli.config import MODEL_NAME
+from adityacli.core.config import MODEL_NAME
+from adityacli.ui.ui import console
 
 
 def stream_response(client, messages):
@@ -10,7 +11,7 @@ def stream_response(client, messages):
         stream=True
     )
 
-    print("\n[green]AdityaCLI[/green] > ",end=" ")
+    console.print("\n[bold green]AdityaCLI[/bold green] >", end=" ")
     for chunk in response:
         content = chunk.choices[0].delta.content
         if content:

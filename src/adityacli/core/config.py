@@ -6,7 +6,7 @@ BASE_URL = "http://127.0.0.1:1234/v1"
 API_KEY = "lm-studio"
 
 
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
+BASE_DIR = Path(__file__).resolve().parents[3]
 
 PROMPTS_DIR = BASE_DIR / "prompts"
 
