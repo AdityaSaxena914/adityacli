@@ -275,18 +275,25 @@ Memory Storage Layer
 
 Implement:
 
-* SQLite storage
-* Session records
-* Session summaries
-* Important decisions
-* Task records
-* Embedding storage
-* Repository knowledge storage
-* Metadata indexing
+* MemoryDB architecture
+* Persistent memory storage
+* Decision storage
+* Task storage
+* Session summary storage
+* Project knowledge storage
+* Memory serialization
+* Memory loading
+* Memory saving
 
 Goal:
 
-Persistent long-term storage for all AdityaCLI knowledge.
+Create a persistent long-term memory layer independent of chat sessions.
+
+Workflow:
+
+MemoryDB
+↓
+memory.json
 
 ---
 
@@ -296,25 +303,27 @@ Memory Retrieval Engine
 
 Implement:
 
-* Similarity search
-* Relevance ranking
-* Session retrieval
+* Retriever architecture
+* Retrieval interface
+* Memory querying
 * Decision retrieval
 * Task retrieval
-* Repository retrieval
-* Context scoring
+* Summary retrieval
+* Knowledge retrieval
+* Memory ranking
+* Top-k retrieval
 
 Goal:
 
-Retrieve the most relevant information from long-term storage for the current task.
+Retrieve relevant memories from MemoryDB.
 
 Workflow:
 
-Memory Database
+MemoryDB
 ↓
 Retriever
 ↓
-Candidate Context
+Relevant Memories
 
 ---
 
@@ -324,18 +333,23 @@ Context Assembly Engine
 
 Implement:
 
-* Intent-aware retrieval
-* Session summary loading
-* Decision loading
-* Task loading
-* Repository knowledge loading
+* Memory aggregation
+* Session context aggregation
+* Decision aggregation
+* Task aggregation
+* Repository context aggregation
 * Context ranking
 * Context compression
 * UCM population
+* UCM generation
+
+Goal:
+
+Construct the active UCM for the current task.
 
 Workflow:
 
-Memory Database
+MemoryDB
 ↓
 Retriever
 ↓
@@ -345,9 +359,27 @@ UCM
 ↓
 Model
 
+
+---
+## Phase 28.5
+
+Semantic Retrieval
+
+Implement:
+
+* Embedding generation
+* Embedding storage
+* Vector search
+* Semantic ranking
+* Hybrid retrieval
+* Similarity scoring
+
 Goal:
 
-Construct the smallest and most relevant UCM possible for each request.
+Improve retrieval quality beyond keyword and rule-based retrieval.
+
+The retrieval interface should remain unchanged while the retrieval implementation becomes semantic.
+
 
 
 ---

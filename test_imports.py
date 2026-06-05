@@ -1,10 +1,11 @@
 from src.adityacli.memory.memory_db import MemoryDB
+from src.adityacli.memory.retrieval import MemoryRetriever
 
 
 db = MemoryDB()
 
-# db.add_decision("Build MemoryDB")
-# db.add_task("Build MemoryDB")
-# db.add_summary("Build MemoryDB")
-# db.add_knowledge("Build MemoryDB")
-print(db.load(
+retriever = MemoryRetriever(db)
+
+print(
+    retriever.retrieve("ucm")
+)

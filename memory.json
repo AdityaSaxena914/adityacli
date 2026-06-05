@@ -1,14 +1,14 @@
 {
     "decisions": [
-        "Build MemoryDB"
+        "Use UCM architecture",
+        "Use model agnostic memory"
     ],
     "tasks": [
-        "Build MemoryDB"
+        "Implement retrieval engine"
     ],
     "summaries": [
-        "Build MemoryDB"
     ],
     "knowledge": [
-        "Build MemoryDB"
+        "AdityaCLI is local first"
     ]
 }
