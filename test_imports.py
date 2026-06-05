@@ -1,6 +1,10 @@
-from openai import OpenAI
-from rich.console import Console
-from pydantic import BaseModel
-import typer
+from src.adityacli.memory.memory_db import MemoryDB
 
-print("All imports successful")
+
+db = MemoryDB()
+
+# db.add_decision("Build MemoryDB")
+# db.add_task("Build MemoryDB")
+# db.add_summary("Build MemoryDB")
+# db.add_knowledge("Build MemoryDB")
+print(db.load(
