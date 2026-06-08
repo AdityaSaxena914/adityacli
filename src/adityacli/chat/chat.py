@@ -1,5 +1,5 @@
-from adityacli.core.config import MODEL_NAME
-from adityacli.ui.ui import console
+from adityacli.core import MODEL_NAME
+from adityacli.ui import console
 
 
 def stream_response(client, messages):

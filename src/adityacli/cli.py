@@ -1,26 +1,27 @@
 import typer
+
+from adityacli.core import (
+    get_client,
+    load_prompt,
+    Tool,
+    register_tool,
+    list_tools
+)
+
 from adityacli.core.chat_session import run_chat
-from adityacli.utils.file_utils import (
-    read_file, 
+
+from adityacli.chat import (
+    get_completion
+)
+
+from adityacli.utils import (
+    read_file,
     get_project_files,
-    write_file
+    write_file,
+    generate_diff
 )
 
-from adityacli.core.config import (
-    load_prompt, 
-    EXPLAIN_PROMPT_PATH, 
-    PROJECT_EXPLAIN_PROMPT_PATH,
-    REVIEW_PROMPT_PATH, 
-    TEST_PROMPT_PATH, DIFF_PROMPT_PATH, 
-    CREATE_FILE_PROMPT_PATH,
-    EDIT_FILE_PROMPT_PATH,
-    SEARCH_SUMMARY_PROMPT_PATH
-)
-
-from adityacli.chat.chat import get_completion
-from adityacli.core.llm import get_client
-from adityacli.utils.diff_generator import generate_diff
-from adityacli.ui.ui import (
+from adityacli.ui import (
     console,
     tool_status,
     success,
@@ -30,20 +31,25 @@ from adityacli.ui.ui import (
     approval_panel
 )
 
-from adityacli.core.tool_registry import (
-    Tool,
-    register_tool,
-    list_tools
-)
-
-from adityacli.tools.search import search_web
-from adityacli.tools.terminal_tool import (run_command)
-from adityacli.tools.git_tool import (
-    git_branch, 
+from adityacli.tools import (
+    search_web,
+    run_command,
+    git_branch,
     git_diff,
     git_log,
     git_status,
     display_command_result
+)
+
+from adityacli.core import (
+    EXPLAIN_PROMPT_PATH,
+    PROJECT_EXPLAIN_PROMPT_PATH,
+    REVIEW_PROMPT_PATH,
+    TEST_PROMPT_PATH,
+    DIFF_PROMPT_PATH,
+    CREATE_FILE_PROMPT_PATH,
+    EDIT_FILE_PROMPT_PATH,
+    SEARCH_SUMMARY_PROMPT_PATH
 )
 
 

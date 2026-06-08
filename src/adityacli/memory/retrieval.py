@@ -16,7 +16,12 @@ class MemoryRetriever:
             memories.append(
                 {
                     "type" : "decision",
-                    "content" : decision
+                    "content" : (
+                        decision["description"]
+                        + " "
+                        + decision.get("reasoning", "")
+                    ),
+                    "metadata": decision
                 }
             )
 
@@ -24,7 +29,8 @@ class MemoryRetriever:
             memories.append(
                 {
                     "type" : "task",
-                    "content" : task
+                    "content" : task["description"],
+                    "metadata": task
                 }
             )
         
@@ -40,7 +46,8 @@ class MemoryRetriever:
             memories.append(
                 {
                     "type" : "knowledge",
-                    "content" : knowledge
+                    "content" : knowledge["description"],
+                    "metadata": knowledge
                 }
             )
 

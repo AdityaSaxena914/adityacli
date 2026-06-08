@@ -1,5 +1,5 @@
 from adityacli.tools.terminal_tool import run_command
-from adityacli.ui.ui import console
+from adityacli.ui import console
 
 def git_status():
     return run_command("git status")
