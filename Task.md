@@ -1,275 +1,273 @@
 # Current Task
 
-## Objective
+## Goal
 
-Replace the UCM-based memory architecture (Memory V1) with a Workspace-Based Knowledge System (Memory V2).
-
-Goal: Build a local-first, provider-agnostic knowledge system that works consistently across all models and sessions.
+Transform AdityaCLI from a session-based memory system into a local-first AI Knowledge Operating System.
 
 ---
 
-# Current Phase
+# Current Architecture Decisions
 
-Memory V2 Architecture Design
+## Global Memory
 
----
-
-# Major Refactor Tasks
-
-## 1. Remove Memory V1 Integration
-
-* [ ] Remove UCM integration from chat flow
-* [ ] Remove ContextBuilder usage
-* [ ] Remove MemoryRetriever usage from runtime
-* [ ] Remove MemoryExtractor usage from runtime
-* [ ] Remove MemoryManager usage from runtime
-* [ ] Archive old memory implementation as `memory_v1/`
+* Explicitly saved only.
+* Use `/save`.
+* Never automatically extracted.
+* Shared across all projects and chats.
+* Accessed via `/use-global-memory`.
 
 ---
 
-## 2. Workspace System Design
+## Projects
 
-* [ ] Replace Session concept with Workspace concept
-* [ ] Define Workspace lifecycle
-* [ ] Support workspace creation
-* [ ] Support workspace switching
-* [ ] Support workspace renaming
-* [ ] Support listing all workspaces
-* [ ] Support workspace metadata
+Projects are top-level containers.
 
-Commands:
+Examples:
 
-* `/workspace create`
-* `/workspace switch`
-* `/workspace rename`
-* `/workspace list`
-* `/workspace info`
-
----
-
-## 3. Global Memory System
-
-Global memory should persist across:
-
-* Models
-* Providers
-* Workspaces
-* Sessions
-
-Implement:
-
-* [ ] Save global memory
-* [ ] List global memory
-* [ ] Delete global memory
-* [ ] Search global memory
-
-Commands:
-
-* `/save`
-* `/memory`
-* `/forget`
-
----
-
-## 4. Workspace Knowledge System
-
-Each workspace should support:
-
-* [ ] Decisions
-* [ ] Tasks
-* [ ] Notes
-* [ ] Summaries
-
-Commands:
-
-* `/decision`
-* `/task`
-* `/note`
-* `/summary`
-
----
-
-## 5. SQLite Migration
-
-Replace JSON storage with SQLite.
-
-Learn and implement:
-
-* [ ] Tables
-* [ ] Primary Keys
-* [ ] Foreign Keys
-* [ ] Indexes
-* [ ] Transactions
-* [ ] SQLite FTS5
-
-Design database schema for:
-
-* [ ] Workspaces
-* [ ] Global Memories
-* [ ] Tasks
-* [ ] Decisions
-* [ ] Notes
-* [ ] Summaries
-* [ ] Workspace Metadata
-
----
-
-## 6. Retrieval System
-
-Replace UCM with Retrieval Engine.
-
-Implement retrieval flow:
-
-User Query
-
-↓
-
-Current Workspace Search
-
-↓
-
-Mounted Workspace Search
-
-↓
-
-Global Memory Search
-
-↓
-
-Ranking
-
-↓
-
-Context Assembly
-
-↓
-
-LLM
-
-Tasks:
-
-* [ ] Current workspace retrieval
-* [ ] Global memory retrieval
-* [ ] Cross-workspace retrieval
-* [ ] Result ranking
-* [ ] Context builder
-
----
-
-## 7. Workspace Mounting
-
-Allow workspaces to access knowledge from other workspaces.
-
-Features:
-
-* [ ] Mount workspace
-* [ ] Unmount workspace
-* [ ] List mounted workspaces
-
-Commands:
-
-* `/mount`
-* `/unmount`
-* `/mounted`
-
-Example:
-
-Current Workspace: AdityaCLI
-
-Mounted:
-
+* AdityaCLI
 * GSoC
 * Krayon
 
+Each project contains:
+
+* Project Memory
+* Multiple Chats
+
 ---
 
-## 8. Search System
+## Project Memory
 
-Implement knowledge search without loading everything into prompts.
+When creating a project:
 
-Features:
+* User provides:
 
-* [ ] Full-text search
-* [ ] Ranking
-* [ ] Filter by workspace
-* [ ] Filter by memory type
+  * Description
+  * Goals
+  * Constraints
+  * Relevant context
+
+Properties:
+
+* Available automatically to chats inside that project.
+* Isolated from other projects.
+* Can be promoted to Global Memory using `/save`.
+
+---
+
+## Chats
+
+Chats are independent context windows.
+
+Two types:
+
+### Project Chats
+
+Belong inside projects.
+
+Example:
+
+AdityaCLI
+
+* Frontend
+* Backend
+* Retrieval Engine
+
+### Standalone Chats
+
+Independent chats not belonging to projects.
+
+Example:
+
+* Resume Help
+* Career Planning
+* Random Discussion
+
+---
+
+## Chat Rules
+
+* Multiple chats can remain active simultaneously.
+* Each chat maintains its own context window.
+* Chats never share context automatically.
+* Chats become searchable knowledge bases after synchronization.
+
+---
+
+## Chat Synchronization
 
 Commands:
 
-* `/search`
-* `/search-workspace`
-* `/search-global`
+* `/sync-chat`
+* `/exit`
+
+Behavior:
+
+* Current conversation is processed.
+* Knowledge database is updated.
+* Progress is displayed to the user.
+
+Example:
+
+Syncing conversation...
+
+Chunking messages...
+Updating database...
+Refreshing search index...
+
+✓ Sync completed
+
+Properties:
+
+* Similar to `git commit`.
+* Manual only.
+* No automatic synchronization.
 
 ---
 
-## 9. Workspace Summarization
+## Retrieval Modes
 
-Reduce prompt size using summaries.
+### Temporary Retrieval
 
-Features:
+Command:
 
-* [ ] Generate periodic summaries
-* [ ] Store summaries
-* [ ] Retrieve summaries during search
+`/use "chat name"`
 
-Strategies:
+Behavior:
 
-* Every N messages
-* Manual summary generation
+* Searches specified chat database.
+* Injects retrieved context for current message only.
+
+---
+
+### Persistent Retrieval
+
+Command:
+
+`/import "chat name"`
+
+Behavior:
+
+* Chat remains available throughout current active chat.
+* Import state disappears when current chat exits.
 
 Commands:
 
-* `/summarize`
-* `/summaries`
+* `/unimport "chat name"`
+* `/imports`
+
+Properties:
+
+* Non-transitive.
+* Runtime only.
+* Circular imports are allowed.
 
 ---
 
-## 10. Provider-Agnostic Design
+## MiniRAG Architecture
 
-Requirements:
+Active Chats:
 
-* [ ] Works with LM Studio
-* [ ] Works with OpenAI-compatible APIs
-* [ ] Works with local models
-* [ ] Shared knowledge across all providers
-* [ ] Shared knowledge across all models
+* Use normal context windows.
+* No retrieval.
 
----
+Archived/Synchronized Chats:
 
-# Architecture Goals
+* Converted into searchable databases.
+* Retrieval performed using search.
 
-* Local-first
-* Offline-first
-* Provider agnostic
-* Model agnostic
-* Explicit knowledge management
-* Workspace-centric design
-* Token efficient retrieval
-* Scalable beyond JSON
-* Production-quality architecture
+Flow:
 
----
-
-# Learning Objectives
-
-Required knowledge:
-
-* [ ] SQLite
-* [ ] Database design
-* [ ] Full Text Search (FTS5)
-* [ ] Retrieval systems
-* [ ] Ranking systems
-* [ ] Basic DBMS concepts
-
-Future learning:
-
-* [ ] Embeddings
-* [ ] Vector databases
-* [ ] Hybrid retrieval
-* [ ] Advanced RAG
+Active Chat
+↓
+/sync-chat
+↓
+Chunking
+↓
+SQLite + FTS5
+↓
+Searchable Knowledge Base
 
 ---
 
-# Immediate Next Task
+## Search Technology
 
-Design SQLite database schema for Memory V2.
+Current implementation target:
+
+* SQLite
+* FTS5
+
+Future enhancements:
+
+* Embeddings
+* Hybrid Retrieval
+
+---
+
+# Current Tasks
+
+## Immediate
+
+* [ ] Remove Memory V1/UCM integration.
+* [ ] Finalize database entities.
+* [ ] Design SQLite schema.
+* [ ] Design retrieval engine architecture.
+* [ ] Design synchronization pipeline.
+
+---
+
+## Chat Management
+
+* [ ] Implement standalone chats.
+* [ ] Implement project chats.
+* [ ] Implement project memory.
+* [ ] Implement chat naming.
+* [ ] Implement `/list-chats`.
+* [ ] Implement `/new`.
+
+---
+
+## Project Management
+
+* [ ] Implement `/new-project`.
+* [ ] Implement `/list-projects`.
+* [ ] Implement project memory storage.
+* [ ] Implement project selection.
+
+---
+
+## Retrieval Commands
+
+* [ ] Implement `/use`.
+* [ ] Implement `/import`.
+* [ ] Implement `/unimport`.
+* [ ] Implement `/imports`.
+* [ ] Implement `/use-global-memory`.
+
+---
+
+## Global Memory
+
+* [ ] Implement `/save`.
+* [ ] Implement global memory search.
+* [ ] Implement global memory listing.
+* [ ] Implement memory deletion.
+
+---
+
+## Synchronization
+
+* [ ] Implement `/sync-chat`.
+* [ ] Implement `/exit` synchronization.
+* [ ] Implement synchronization progress UI.
+* [ ] Implement MiniRAG updates.
+
+---
+
+# Future Tasks
+
+* Plugin system
+* MCP compatibility
+* LSP integration
+* Embedding-based retrieval
+* Hybrid search
+* Extension ecosystem
