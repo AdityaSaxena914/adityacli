@@ -30,7 +30,7 @@ class MemoryExtractor:
                 "role": "system",
                 "content": memory_prompt
             },
-
+ 
             {
                 "role": "user",
                 "content": conversation
